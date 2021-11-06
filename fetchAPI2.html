@@ -1,0 +1,207 @@
+<html>
+  <head>
+    <title>Students API</title>
+  </head>
+  <body>
+    <h1>Students</h1>
+    <div style="float: left">
+      <ul id="CCUserList">
+        <!-- insert from js -->
+      </ul>
+    </div>
+    <div style="float: left">
+      <ul style="color: red" id="CKUserList">
+        <!-- insert from js -->
+      </ul>
+    </div>
+  </body>
+
+  <script>
+    const fetchUsers = () => {
+      //here is a arrow function
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then((res) => {
+          //step number 1 Check the status of request
+          if (res.status !== 200) {
+            //this is a http status,200 means ok
+            console.log(`ops, something is wrong ${res.status}`);
+          } //the result will return JSON
+
+          // //step number 2 Convert data to json
+          res.json().then((data) => {
+            ccFunction(data);
+            const userList = document.getElementById("CKUserList");
+            for (let user of data) {
+              recursionLoopUser(user, userList);
+            }
+          });
+
+          //   Object.keys(data).forEach((key) => {
+          //     value = data[key];
+          //     console.log(`Key:${key}, Value: ${value}`);
+          //     if (value instanceof Array) {
+          //     } else if (value instanceof Object) {
+          //     } else {
+          //     }
+          //   });
+
+          //   keyArray = Object.keys(data);
+          // keyArray = [id, name, username, email, address, phone, website, company]
+
+          //   for (let i = 0; i < keyArray.length; i++) {
+          //     const keyIdx = keyArray[i];
+          //   }
+          //   for (let key in keyArray) {
+          //   }
+          //   keyArray.forEach((key) => {
+
+          //   });
+        })
+        .catch((err) => {
+          console.log(`errorcc ${err}`);
+        });
+    };
+
+    const recursionLoopUser = (userObj, parentDOM) => {
+      const ulDOM = document.createElement("ul");
+      parentDOM.appendChild(ulDOM);
+
+      Object.entries(userObj).forEach(([objKey, objValue]) => {
+        const liDOM = document.createElement("li");
+        ulDOM.appendChild(liDOM);
+
+        // Set title
+        const keyDom = document.createElement("span");
+        liDOM.appendChild(keyDom);
+        keyDom.innerHTML = objKey + ": ";
+
+        // Set value
+        const childDOM = document.createElement("span");
+        liDOM.appendChild(childDOM);
+        const nextLineDOM = document.createElement("br");
+        liDOM.appendChild(nextLineDOM);
+
+        if (objValue instanceof Array) {
+          // Array property
+          childDOM.innerHTML = objValue.join(", ");
+          return;
+        } else if (objValue instanceof Object) {
+          const containerDOM = document.createElement("div");
+          childDOM.appendChild(containerDOM);
+          // Object property
+          recursionLoopUser(objValue, childDOM);
+          return;
+        } else {
+          // Other property
+          childDOM.innerHTML = objValue;
+          return;
+        }
+      });
+    };
+
+    const ccFunction = (usersData) => {
+      //create a promise
+      //make sure we can console the result, but do not need to show on the page
+      //Grab the data and append in the HTML (wirte below things inside the promise object)
+
+      // Create HTML DOM
+      const userListDOM = document.getElementById("CCUserList");
+
+      for (let user of usersData) {
+        console.log(user);
+        const userItemDOM = document.createElement("li");
+
+        const idDOM = document.createElement("div");
+        const nameDOM = document.createElement("div");
+        const usernameDOM = document.createElement("div");
+        const emailDOM = document.createElement("div");
+        const addressDOM = document.createElement("div");
+        const phoneDOM = document.createElement("div");
+        const websiteDOM = document.createElement("div");
+        const companyDOM = document.createElement("div");
+
+        const userAddressDetailContainerDOM = document.createElement("ul");
+        const userAddressDetailDOM = document.createElement("li");
+
+        const addressStreetDOM = document.createElement("div");
+        const addressSuiteDOM = document.createElement("div");
+        const addressCityDOM = document.createElement("div");
+        const addressZipcodeDOM = document.createElement("div");
+        const addressGeoDOM = document.createElement("div");
+
+        const userAddressGeoDetailContainerDOM = document.createElement("ul");
+        const userAddressGeoDetailDOM = document.createElement("li");
+
+        const addressGeoLatDOM = document.createElement("div");
+        const addressGeoLngDOM = document.createElement("div");
+
+        const userCompanyDetailContainerDOM = document.createElement("ul");
+        const userCompanyDetailDOM = document.createElement("li");
+
+        const companyNameDOM = document.createElement("div");
+        const companyCatchPhraseDOM = document.createElement("div");
+        const companyBsDOM = document.createElement("div");
+
+        // Insert Key and Value
+        idDOM.innerHTML = `id: ${user.id}`;
+        nameDOM.innerHTML = `name: ${user.name}`;
+        usernameDOM.innerHTML = `username: ${user.username}`;
+        emailDOM.innerHTML = `email: ${user.email}`;
+        addressDOM.innerHTML = `address:`;
+        phoneDOM.innerHTML = `phone: ${user.phone}`;
+        websiteDOM.innerHTML = `website: ${user.website}`;
+        companyDOM.innerHTML = `company:`;
+
+        addressStreetDOM.innerHTML = `Street: ${user.address.street}`;
+        addressSuiteDOM.innerHTML = `Suite: ${user.address.suite}`;
+        addressCityDOM.innerHTML = `City: ${user.address.city}`;
+        addressZipcodeDOM.innerHTML = `Zipcode: ${user.address.zipcode}`;
+        addressGeoDOM.innerHTML = `Geo:`;
+
+        addressGeoLatDOM.innerHTML = `Lat: ${user.address.geo.lat}`;
+        addressGeoLngDOM.innerHTML = `Lng: ${user.address.geo.lng}`;
+
+        companyNameDOM.innerHTML = `Name: ${user.company.name}`;
+        companyCatchPhraseDOM.innerHTML = `CatchPhrase: ${user.company.catchPhrase}`;
+        companyBsDOM.innerHTML = `Bs: ${user.company.bs}`;
+
+        // organize DOM
+        userListDOM.appendChild(userItemDOM);
+
+        userItemDOM.appendChild(idDOM);
+        userItemDOM.appendChild(nameDOM);
+        userItemDOM.appendChild(usernameDOM);
+        userItemDOM.appendChild(emailDOM);
+        userItemDOM.appendChild(addressDOM);
+
+        addressDOM.appendChild(userAddressDetailContainerDOM);
+        userAddressDetailContainerDOM.appendChild(userAddressDetailDOM);
+
+        userAddressDetailDOM.appendChild(addressStreetDOM);
+        userAddressDetailDOM.appendChild(addressSuiteDOM);
+        userAddressDetailDOM.appendChild(addressCityDOM);
+        userAddressDetailDOM.appendChild(addressZipcodeDOM);
+        userAddressDetailDOM.appendChild(addressGeoDOM);
+
+        addressGeoDOM.appendChild(userAddressGeoDetailContainerDOM);
+        userAddressGeoDetailContainerDOM.appendChild(userAddressGeoDetailDOM);
+
+        userAddressGeoDetailDOM.appendChild(addressGeoLatDOM);
+        userAddressGeoDetailDOM.appendChild(addressGeoLngDOM);
+
+        userItemDOM.appendChild(phoneDOM);
+        userItemDOM.appendChild(websiteDOM);
+        userItemDOM.appendChild(companyDOM);
+
+        companyDOM.appendChild(userCompanyDetailContainerDOM);
+        userCompanyDetailContainerDOM.appendChild(userCompanyDetailDOM);
+
+        userCompanyDetailDOM.appendChild(companyNameDOM);
+        userCompanyDetailDOM.appendChild(companyCatchPhraseDOM);
+        userCompanyDetailDOM.appendChild(companyBsDOM);
+      }
+    };
+
+    fetchUsers();
+  </script>
+</html>
